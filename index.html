@@ -1,0 +1,1652 @@
+<script>
+        // Load saved settings
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+            
+            // Load logo and brand
+            if (settings.companyName) {
+                document.getElementById('companyName').value = settings.companyName;
+                updateLogo(settings.logoImage || '☕', settings.companyName);
+            }
+            if (settings.logoImage) {
+                document.getElementById('logoImage').value = settings.logoImage;
+            }
+            if (settings.faviconUrl) {
+                document.getElementById('faviconUrl').value = settings.faviconUrl;
+                updateFavicon(settings.faviconUrl);
+            }
+            
+            // Load colors
+            if (settings.primaryColor) {
+                document.getElementById('primaryColor').value = settings.primaryColor;
+                document.getElementById('primaryColorText').value = settings.primaryColor;
+                document.documentElement.style.setProperty('--primary', settings.primaryColor);
+            }
+            if (settings.primaryDarkColor) {
+                document.getElementById('primaryDarkColor').value = settings.primaryDarkColor;
+                document.getElementById('primaryDarkColorText').value = settings.primaryDarkColor;
+                document.documentElement.style.setProperty('--primary-dark', settings.primaryDarkColor);
+            }
+            if (settings.accentColor) {
+                document.getElementById('accentColor').value = settings.accentColor;
+                document.getElementById('accentColorText').value = settings.accentColor;
+                document.documentElement.style.setProperty('--accent', settings.accentColor);
+            }
+            if (settings.lightColor) {
+                document.getElementById('lightColor').value = settings.lightColor;
+                document.getElementById('lightColorText').value = settings.lightColor;
+                document.documentElement.style.setProperty('--light', settings.lightColor);
+            }
+            
+            // Load navigation links
+            for (let i = 1; i <= 4; i++) {
+                if (settings[`navLink${i}`]) {
+                    document.getElementById(`navLink${i}`).value = settings[`navLink${i}`];
+                    document.getElementById(`navLink${i}Display`).textContent = settings[`navLink${i}`];
+                    document.getElementById(`footerLink${i}`).textContent = settings[`navLink${i}`];
+                }
+            }
+            
+            // Load hero section
+            if (settings.heroTitle) {
+                document.getElementById('heroTitle').value = settings.heroTitle;
+                document.getElementById('heroTitleDisplay').textContent = settings.heroTitle;
+            }
+            if (settings.heroDescription) {
+                document.getElementById('heroDescription').value = settings.heroDescription;
+                document.getElementById('heroDescriptionDisplay').textContent = settings.heroDescription;
+            }
+            if (settings.heroButtonText) {
+                document.getElementById('heroButtonText').value = settings.heroButtonText;
+                document.getElementById('heroButtonDisplay').textContent = settings.heroButtonText;
+            }
+            if (settings.heroBackground) {
+                document.getElementById('heroBackground').value = settings.heroBackground;
+                const hero = document.querySelector('.hero');
+                hero.style.backgroundImage = `linear-gradient(135deg, rgba(139, 69, 19, 0.9), rgba(93, 47, 10, 0.9)), url('${settings.heroBackground}')`;
+            }
+            
+            // Load benefits section
+            if (settings.benefitsTitle) {
+                document.getElementById('benefitsTitle').value = settings.benefitsTitle;
+                document.getElementById('benefitsTitleDisplay').textContent = settings.benefitsTitle;
+            }
+            
+            for (let i = 1; i <= 4; i++) {
+                if (settings[`benefit${i}Title`]) {
+                    document.getElementById(`benefit${i}Title`).value = settings[`benefit${i}Title`];
+                    document.getElementById(`benefit${i}TitleDisplay`).textContent = settings[`benefit${i}Title`];
+                }
+                if (settings[`benefit${i}Desc`]) {
+                    document.getElementById(`benefit${i}Desc`).value = settings[`benefit${i}Desc`];
+                    document.getElementById(`benefit${i}DescDisplay`).textContent = settings[`benefit${i}Desc`];
+                }
+                if (settings[`benefit${i}Icon`]) {
+                    document.getElementById(`benefit${i}Icon`).value = settings[`benefit${i}Icon`];
+                    document.getElementById(`benefit${i}IconDisplay`).textContent = settings[`benefit${i}Icon`];
+                }
+            }
+            
+            // Load products section
+            if (settings.productsTitle) {
+                document.getElementById('productsTitle').value = settings.productsTitle;
+                document.getElementById('productsTitleDisplay').textContent = settings.productsTitle;
+            }
+            
+            for (let i = 1; i <= 6; i++) {
+                if (settings[`product${i}Name`]) {
+                    document.getElementById(`product${i}Name`).value = settings[`product${i}Name`];
+                    document.getElementById(`product${i}NameDisplay`).textContent = settings[`product${i}Name`];
+                }
+                if (settings[`product${i}Desc`]) {
+                    document.getElementById(`product${i}Desc`).value = settings[`product${i}Desc`];
+                    document.getElementById(`product${i}DescDisplay`).textContent = settings[`product${i}Desc`];
+                }
+                if (settings[`product${i}Badge`]) {
+                    document.getElementById(`product${i}Badge`).value = settings[`product${i}Badge`];
+                    document.getElementById(`product${i}BadgeDisplay`).textContent = settings[`product${i}Badge`];
+                }
+                if (settings[`product${i}Image`]) {
+                    document.getElementById(`product${i}Image`).value = settings[`product${i}Image`];
+                    const productDiv = document.getElementById(`product${i}ImageDisplay`);
+                    productDiv.style.backgroundImage = `url('${settings[`product${i}Image`]}')`;
+                    productDiv.textContent = '';
+                    const preview = document.getElementById(`product${i}Preview`);
+                    preview.src = settings[`product${i}Image`];
+                    preview.style.display = 'block';
+                }
+            }
+            
+            // Load CTA section
+            if (settings.ctaTitle) {
+                document.getElementById('ctaTitle').value = settings.ctaTitle;
+                document.getElementById('ctaTitleDisplay').textContent = settings.ctaTitle;
+            }
+            if (settings.ctaDescription) {
+                document.getElementById('ctaDescription').value = settings.ctaDescription;
+                document.getElementById('ctaDescriptionDisplay').textContent = settings.ctaDescription;
+            }
+            if (settings.ctaButtonText) {
+                document.getElementById('ctaButtonText').value = settings.ctaButtonText;
+                document.getElementById('ctaButtonDisplay').textContent = settings.ctaButtonText;
+            }
+            
+            // Load contact info
+            if (settings.whatsappNumber) {
+                document.getElementById('whatsappNumber').value = settings.whatsappNumber;
+            }
+            if (settings.whatsappMessage) {
+                document.getElementById('whatsappMessage').value = settings.whatsappMessage;
+            }
+            
+            // Load footer
+            if (settings.footerCopyright) {
+                document.getElementById('footerCopyright').value = settings.footerCopyright;
+                document.getElementById('footerCopyrightDisplay').textContent = '© ' + settings.footerCopyright;
+            }
+        }
+
+        function updateLogo(logo, companyName) {
+            const logoElements = [document.getElementById('logoDisplay'), document.getElementById('footerLogoDisplay')];
+            logoElements.forEach(el => {
+                if (logo.startsWith('http')) {
+                    el.innerHTML = `<img src="${logo}" alt="${companyName}" style="height: 40px; margin-right: 0.5rem;"> ${companyName}`;
+                } else {
+                    el.textContent = `${logo} ${companyName}`;
+                }
+            });
+        }
+
+        function updateFavicon(url) {
+            let link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = url;
+        }
+
+        // Save settings
+        function saveSettings() {
+            const settings = {
+                // Logo and brand
+                companyName: document.getElementById('companyName').value,
+                logoImage: document.getElementById('logoImage').value,
+                faviconUrl: document.getElementById('faviconUrl').value,
+                // Colors
+                primaryColor: document.getElementById('primaryColor').value,
+                primaryDarkColor: document.getElementById('primaryDarkColor').value,
+                accentColor: document.getElementById('accentColor').value,
+                lightColor: document.getElementById('lightColor').value,
+                // Navigation
+                navLink1: document.getElementById('navLink1').value,
+                navLink2: document.getElementById('navLink2').value,
+                navLink3: document.getElementById('navLink3').value,
+                navLink4: document.getElementById('navLink4').value,
+                // Hero section
+                heroTitle: document.getElementById('heroTitle').value,
+                heroDescription: document.getElementById('heroDescription').value,
+                heroButtonText: document.getElementById('heroButtonText').value,
+                heroBackground: document.getElementById('heroBackground').value,
+                // Benefits section
+                benefitsTitle: document.getElementById('benefitsTitle').value,
+                benefit1Title: document.getElementById('benefit1Title').value,
+                benefit1Desc: document.getElementById('benefit1Desc').value,
+                benefit1Icon: document.getElementById('benefit1Icon').value,
+                benefit2Title: document.getElementById('benefit2Title').value,
+                benefit2Desc: document.getElementById('benefit2Desc').value,
+                benefit2Icon: document.getElementById('benefit2Icon').value,
+                benefit3Title: document.getElementById('benefit3Title').value,
+                benefit3Desc: document.getElementById('benefit3Desc').value,
+                benefit3Icon: document.getElementById('benefit3Icon').value,
+                benefit4Title: document.getElementById('benefit4Title').value,
+                benefit4Desc: document.getElementById('benefit4Desc').value,
+                benefit4Icon: document.getElementById('benefit4Icon').value,
+                // Products section
+                productsTitle: document.getElementById('productsTitle').value,
+                // CTA section
+                ctaTitle: document.getElementById('ctaTitle').value,
+                ctaDescription: document.getElementById('ctaDescription').value,
+                ctaButtonText: document.getElementById('ctaButtonText').value,
+                // Contact
+                whatsappNumber: document.getElementById('whatsappNumber').value,
+                whatsappMessage: document.getElementById('whatsappMessage').value,
+                // Footer
+                footerCopyright: document.getElementById('footerCopyright').value
+            };
+            
+            // Save products
+            for (let i = 1; i <= 6; i++) {
+                settings[`product${i}Name`] = document.getElementById(`product${i}Name`).value;
+                settings[`product${i}Desc`] = document.getElementById(`product${i}Desc`).value;
+                settings[`product${i}Badge`] = document.getElementById(`product${i}Badge`).value;
+                settings[`product${i}Image`] = document.getElementById(`product${i}Image`).value;
+            }
+            
+            localStorage.setItem('siteSettings', JSON.stringify(settings));
+            
+            // Apply settings immediately
+            loadSettings();
+            
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Reset settings
+        function resetSettings() {
+            if (confirm('¿Estás seguro de que quieres restaurar todos los valores por defecto?')) {
+                localStorage.removeItem('siteSettings');
+                location.reload();
+            }
+        }
+
+        // Toggle dashboard
+        function toggleDashboard() {
+            document.getElementById('dashboardPanel').classList.toggle('active');
+        }
+
+        // Color picker sync
+        document.querySelectorAll('input[type="color"]').forEach(input => {
+            input.addEventListener('input', function() {
+                const textInput = document.getElementById(this.id + 'Text');
+                if (textInput) {
+                    textInput.value = this.value;
+                }
+            });
+        });
+
+        // Image preview
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`product${i}Image`).addEventListener('input', function() {
+                const preview = document.getElementById(`product${i}Preview`);
+                if (this.value) {
+                    preview.src = this.value;
+                    preview.style.display = 'block';
+                    preview.onerror = function() {
+                        this.style.display = 'none';
+                    };
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
+        }
+
+        // Toggle menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Toggle chatbot
+        function toggleChat() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.classList.toggle('active');
+        }
+
+        // Chatbot functionality
+        const responses = {
+            productos: {
+                text: "Tenemos una amplia línea de productos con Ganoderma:\n\n☕ Lingzhi Coffee 3 en 1 - El más popular\n☕ Black Coffee 2 en 1 - Sin azúcar\n☕ White Coffee Zhino - Cremoso\n☕ Vita Café 6 en 1 - Energético\n☕ Zhi Mocha - Gourmet\n\n¿Sobre cuál te gustaría saber más?",
+                options: ['Ver precios', 'Beneficios del Ganoderma', 'Contactar asesor']
+            },
+            beneficios: {
+                text: "El café con Ganoderma ofrece múltiples beneficios:\n\n🛡️ Fortalece el sistema inmune\n⚡ Aumenta energía naturalmente\n💚 Mejora el metabolismo\n🌿 100% natural y orgánico\n😊 Reduce el estrés\n\n¿Te gustaría probar nuestros productos?",
+                options: ['Sí, quiero comprar', 'Ver productos', 'Más información']
+            },
+            comprar: {
+                text: "Comprar es muy fácil:\n\n1️⃣ Elige tus productos favoritos\n2️⃣ Contacta a un asesor\n3️⃣ Recibe asesoría personalizada\n4️⃣ Realiza tu pedido\n5️⃣ ¡Disfruta de tu café saludable!\n\n¿Te contacto con un asesor por WhatsApp?",
+                options: ['Sí, contáctenme', 'Ver catálogo', 'Preguntas frecuentes']
+            },
+            contacto: {
+                text: "¡Perfecto! Te voy a redirigir a WhatsApp donde uno de nuestros asesores te atenderá personalmente. 📱\n\n¿Listo para comenzar?",
+                options: ['Abrir WhatsApp', 'Ver productos primero', 'Inicio']
+            }
+        };
+
+        function sendMessage(option) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const optionsContainer = document.getElementById('chatOptions');
+            
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `<div class="message-bubble">${getOptionText(option)}</div>`;
+            messagesContainer.appendChild(userMessage);
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+            messagesContainer.appendChild(typingIndicator);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            setTimeout(() => {
+                messagesContainer.removeChild(typingIndicator);
+                
+                if (option === 'Abrir WhatsApp') {
+                    const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+                    const whatsappNumber = settings.whatsappNumber || '573182123873';
+                    const whatsappMessage = settings.whatsappMessage || 'Hola, estoy interesado en los productos de café con Ganoderma de DAILY CANASA DXN';
+                    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'message bot';
+                    botMessage.innerHTML = `<div class="message-bubble">¡Te he redirigido a WhatsApp! 🎉 Si no se abrió automáticamente, contáctanos.</div>`;
+                    messagesContainer.appendChild(botMessage);
+                } else {
+                    const response = responses[option] || responses['productos'];
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'message bot';
+                    botMessage.innerHTML = `<div class="message-bubble">${response.text}</div>`;
+                    messagesContainer.appendChild(botMessage);
+                    
+                    optionsContainer.innerHTML = '';
+                    if (response.options) {
+                        response.options.forEach(opt => {
+                            const btn = document.createElement('button');
+                            btn.className = 'option-btn';
+                            btn.textContent = opt;
+                            btn.onclick = () => sendMessage(opt);
+                            optionsContainer.appendChild(btn);
+                        });
+                    }
+                }
+                
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1500);
+        }
+
+        function getOptionText(option) {
+            const texts = {
+                'productos': '📦 Ver productos',
+                'beneficios': '✨ Conocer beneficios',
+                'comprar': '🛒 ¿Cómo comprar?',
+                'contacto': '📞 Contactar por WhatsApp',
+                'Ver precios': 'Ver precios',
+                'Beneficios del Ganoderma': 'Beneficios del Ganoderma',
+                'Contactar asesor': 'Contactar asesor',
+                'Sí, quiero comprar': 'Sí, quiero comprar',
+                'Ver productos': 'Ver productos',
+                'Más información': 'Más información',
+                'Sí, contáctenme': 'Sí, contáctenme',
+                'Ver catálogo': 'Ver catálogo',
+                'Preguntas frecuentes': 'Preguntas frecuentes',
+                'Abrir WhatsApp': 'Sí, abrir WhatsApp',
+                'Ver productos primero': 'Ver productos primero',
+                'Inicio': 'Volver al inicio'
+            };
+            return texts[option] || option;
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelector('.nav-links').classList.remove('active');
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 5px 30px rgba(0,0,0,0.15)';
+            } else {
+                header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            }
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .product-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        window.addEventListener('DOMContentLoaded', loadSettings);
+    </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAILY CANASA DXN - Café Ganoderma</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B4513;
+            --primary-dark: #5D2F0A;
+            --accent: #D4AF37;
+            --dark: #1a1a1a;
+            --light: #f8f5f0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-toggle {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+
+        .dashboard-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .dashboard-toggle svg {
+            width: 25px;
+            height: 25px;
+            fill: white;
+        }
+
+        .dashboard-panel {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+            z-index: 1002;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .dashboard-panel.active {
+            right: 0;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .dashboard-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .close-dashboard {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-dashboard:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .dashboard-content {
+            padding: 1.5rem;
+        }
+
+        .dashboard-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .dashboard-section h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .color-input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .color-input-group input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .color-input-group input[type="text"] {
+            flex: 1;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 0.8rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-reset:hover {
+            background: #c82333;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+        }
+
+        .success-message {
+            background: #28a745;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header/Nav */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            transition: all 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            min-height: 90vh;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.9), rgba(93, 47, 10, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%238B4513" width="1200" height="600"/><path fill="%23654321" opacity="0.3" d="M0 300 Q300 200 600 300 T1200 300 V600 H0 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '☕';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.05;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--accent);
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .product-card {
+            background: var(--light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .product-info p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--accent);
+            color: var(--dark);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-btn svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 30px rgba(37, 211, 102, 0.7);
+            }
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chatbot-container.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-chat:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            color: var(--dark);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chatbot-options {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .option-btn {
+            padding: 0.8rem;
+            background: var(--light);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 1rem;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .dashboard-toggle {
+                width: 45px;
+                height: 45px;
+                right: 20px;
+                top: 90px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                flex-direction: column;
+                background: var(--white);
+                width: 100%;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                transition: left 0.3s;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-container {
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+
+            .whatsapp-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Toggle Button -->
+    <div class="dashboard-toggle" onclick="toggleDashboard()" title="Abrir Panel de Administración">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+    </div>
+
+    <!-- Dashboard Panel -->
+    <div class="dashboard-panel" id="dashboardPanel">
+        <div class="dashboard-header">
+            <h2>⚙️ Panel de Administración</h2>
+            <button class="close-dashboard" onclick="toggleDashboard()">×</button>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Logo y Marca -->
+            <div class="dashboard-section">
+                <h3>🏷️ Logo y Marca</h3>
+                
+                <div class="form-group">
+                    <label>Nombre de la Empresa</label>
+                    <input type="text" id="companyName" value="DAILY CANASA DXN">
+                </div>
+
+                <div class="form-group">
+                    <label>Logo (URL de imagen o emoji)</label>
+                    <input type="text" id="logoImage" value="☕" placeholder="☕ o URL de imagen">
+                    <small style="color: #666; font-size: 0.85rem;">Usa un emoji como ☕ o la URL de tu logo</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Favicon (URL de imagen pequeña)</label>
+                    <input type="url" id="faviconUrl" placeholder="https://ejemplo.com/favicon.ico">
+                </div>
+            </div>
+
+            <!-- Colores -->
+            <div class="dashboard-section">
+                <h3>🎨 Colores del Sitio</h3>
+                
+                <div class="form-group">
+                    <label>Color Primario</label>
+                    <div class="color-input-group">
+                        <input type="color" id="primaryColor" value="#8B4513">
+                        <input type="text" id="primaryColorText" value="#8B4513" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Color Primario Oscuro</label>
+                    <div class="color-input-group">
+                        <input type="color" id="primaryDarkColor" value="#5D2F0A">
+                        <input type="text" id="primaryDarkColorText" value="#5D2F0A" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Color de Acento</label>
+                    <div class="color-input-group">
+                        <input type="color" id="accentColor" value="#D4AF37">
+                        <input type="text" id="accentColorText" value="#D4AF37" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Color de Fondo Claro</label>
+                    <div class="color-input-group">
+                        <input type="color" id="lightColor" value="#f8f5f0">
+                        <input type="text" id="lightColorText" value="#f8f5f0" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú de Navegación -->
+            <div class="dashboard-section">
+                <h3>🧭 Menú de Navegación</h3>
+                
+                <div class="form-group">
+                    <label>Enlace 1</label>
+                    <input type="text" id="navLink1" value="Inicio">
+                </div>
+
+                <div class="form-group">
+                    <label>Enlace 2</label>
+                    <input type="text" id="navLink2" value="Beneficios">
+                </div>
+
+                <div class="form-group">
+                    <label>Enlace 3</label>
+                    <input type="text" id="navLink3" value="Productos">
+                </div>
+
+                <div class="form-group">
+                    <label>Enlace 4</label>
+                    <input type="text" id="navLink4" value="Contacto">
+                </div>
+            </div>
+
+            <!-- Textos del Hero -->
+            <div class="dashboard-section">
+                <h3>🎯 Sección Principal (Hero)</h3>
+                
+                <div class="form-group">
+                    <label>Título Principal</label>
+                    <input type="text" id="heroTitle" value="Café con Ganoderma Lucidum">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="heroDescription">Descubre el poder del hongo milenario combinado con tu bebida favorita. Energía natural, bienestar completo.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Texto del Botón Principal</label>
+                    <input type="text" id="heroButtonText" value="Explorar Productos">
+                </div>
+
+                <div class="form-group">
+                    <label>Imagen de Fondo del Hero (URL)</label>
+                    <input type="url" id="heroBackground" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+            </div>
+
+            <!-- Sección de Beneficios -->
+            <div class="dashboard-section">
+                <h3>✨ Sección de Beneficios</h3>
+                
+                <div class="form-group">
+                    <label>Título de la Sección</label>
+                    <input type="text" id="benefitsTitle" value="¿Para Qué Sirve el Café con Ganoderma?">
+                </div>
+
+                <div class="form-group">
+                    <label>Beneficio 1 - Título</label>
+                    <input type="text" id="benefit1Title" value="Fortalece el Sistema Inmune">
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 1 - Descripción</label>
+                    <textarea id="benefit1Desc">Rico en antioxidantes y componentes bioactivos que protegen y fortalecen tu organismo naturalmente.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 1 - Emoji/Icono</label>
+                    <input type="text" id="benefit1Icon" value="🛡️" maxlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label>Beneficio 2 - Título</label>
+                    <input type="text" id="benefit2Title" value="Aumenta la Energía">
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 2 - Descripción</label>
+                    <textarea id="benefit2Desc">Combina los beneficios energéticos del café con las propiedades adaptogénicas del Ganoderma.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 2 - Emoji/Icono</label>
+                    <input type="text" id="benefit2Icon" value="⚡" maxlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label>Beneficio 3 - Título</label>
+                    <input type="text" id="benefit3Title" value="Mejora el Metabolismo">
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 3 - Descripción</label>
+                    <textarea id="benefit3Desc">Actúa como diurético natural y ayuda a optimizar tu metabolismo de forma saludable.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 3 - Emoji/Icono</label>
+                    <input type="text" id="benefit3Icon" value="💚" maxlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label>Beneficio 4 - Título</label>
+                    <input type="text" id="benefit4Title" value="100% Natural">
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 4 - Descripción</label>
+                    <textarea id="benefit4Desc">Ingredientes orgánicos sin conservantes ni colorantes artificiales para tu bienestar total.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Beneficio 4 - Emoji/Icono</label>
+                    <input type="text" id="benefit4Icon" value="🌿" maxlength="2">
+                </div>
+            </div>
+
+            <!-- Sección de Productos -->
+            <div class="dashboard-section">
+                <h3>🛍️ Sección de Productos</h3>
+                
+                <div class="form-group">
+                    <label>Título de la Sección</label>
+                    <input type="text" id="productsTitle" value="Línea de Productos DXN">
+                </div>
+
+                <!-- Producto 1 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 1</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product1Name" value="Lingzhi Coffee 3 en 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product1Desc">Café premium con extracto de Ganoderma, leche vegetal y el equilibrio perfecto de sabor.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product1Badge" value="Más Popular">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product1Image" placeholder="URL de la imagen">
+                        <img id="product1Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Producto 2 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 2</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product2Name" value="Lingzhi Black Coffee 2 en 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product2Desc">Café negro intenso con Ganoderma. Sin azúcar, perfecto para oficina y momentos especiales.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product2Badge" value="Sin Azúcar">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product2Image" placeholder="URL de la imagen">
+                        <img id="product2Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Producto 3 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 3</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product3Name" value="White Coffee Zhino">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product3Desc">Delicioso café con leche, textura cremosa y el poder del Ganoderma en cada taza.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product3Badge" value="Cremoso">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product3Image" placeholder="URL de la imagen">
+                        <img id="product3Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Producto 4 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 4</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product4Name" value="Vita Café 6 en 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product4Desc">Café energético con Ginseng, Tongkat Ali y Ganoderma. Equilibrio hormonal natural.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product4Badge" value="Energético">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product4Image" placeholder="URL de la imagen">
+                        <img id="product4Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Producto 5 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 5</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product5Name" value="Zhi Mocha">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product5Desc">Exquisita combinación de café, chocolate y Ganoderma con aroma sofisticado.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product5Badge" value="Gourmet">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product5Image" placeholder="URL de la imagen">
+                        <img id="product5Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Producto 6 -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem;">
+                    <h4 style="color: #667eea; margin-bottom: 1rem;">Producto 6</h4>
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="product6Name" value="Zhi Cafe Classic">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="product6Desc">Granos tostados con extracto puro de Ganoderma. Aroma y sabor clásico realzado.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Etiqueta/Badge</label>
+                        <input type="text" id="product6Badge" value="Premium">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen (URL)</label>
+                        <input type="url" id="product6Image" placeholder="URL de la imagen">
+                        <img id="product6Preview" class="image-preview" style="display:none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección CTA -->
+            <div class="dashboard-section">
+                <h3>📣 Sección de Llamado a la Acción</h3>
+                
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="ctaTitle" value="¿Listo para Comenzar tu Transformación?">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="ctaDescription">Únete a miles de personas que ya disfrutan de los beneficios del café con Ganoderma</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Texto del Botón</label>
+                    <input type="text" id="ctaButtonText" value="Contáctanos Ahora">
+                </div>
+            </div>
+
+            <!-- Contacto -->
+            <div class="dashboard-section">
+                <h3>📞 Información de Contacto</h3>
+                
+                <div class="form-group">
+                    <label>Número de WhatsApp (con código de país)</label>
+                    <input type="text" id="whatsappNumber" value="573182123873" placeholder="573182123873">
+                </div>
+
+                <div class="form-group">
+                    <label>Mensaje predefinido de WhatsApp</label>
+                    <textarea id="whatsappMessage">Hola, estoy interesado en los productos de café con Ganoderma de DAILY CANASA DXN</textarea>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="dashboard-section">
+                <h3>📄 Pie de Página (Footer)</h3>
+                
+                <div class="form-group">
+                    <label>Texto de Copyright</label>
+                    <input type="text" id="footerCopyright" value="2024 DAILY CANASA DXN. Todos los derechos reservados.">
+                </div>
+            </div>
+
+            <button class="btn-save" onclick="saveSettings()">💾 Guardar Todos los Cambios</button>
+            <button class="btn-reset" onclick="resetSettings()">🔄 Restaurar Valores por Defecto</button>
+            
+            <div class="success-message" id="successMessage">
+                ✅ Cambios guardados exitosamente
+            </div>
+        </div>
+    </div>
